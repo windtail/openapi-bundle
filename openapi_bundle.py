@@ -4,9 +4,18 @@ import click
 import os
 import sys
 import json
-import yaml
+import oyaml as yaml
+import collections
+
 
 __all__ = ["bundle"]
+
+def str_presenter(dumper, data):
+  if len(data.splitlines()) > 1:  # check for multiline string
+    return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='|')
+  return dumper.represent_scalar('tag:yaml.org,2002:str', data)
+
+yaml.add_representer(str, str_presenter)
 
 
 def get_file_ext(file_path):
@@ -59,7 +68,7 @@ def load_json_or_yaml(abs_file_path):
     ext = get_file_ext(abs_file_path)
     with open(abs_file_path, "rt", encoding="utf-8") as f:
         if ext == ".json":
-            data = json.load(f)
+            data = json.load(f, object_pairs_hook=collections.OrderedDict)
         elif ext == ".yaml":
             data = yaml.load(f)
         else:
@@ -115,7 +124,8 @@ def cli(output_format, entry):
     if output_format == "json":
         json.dump(api, fp=sys.stdout, ensure_ascii=False, indent=2)
     else:
-        yaml.dump(api, stream=sys.stdout, allow_unicode=True)
+        yaml.dump(api, stream=sys.stdout, allow_unicode=True,
+                  default_flow_style=False)
 
 
 if __name__ == '__main__':

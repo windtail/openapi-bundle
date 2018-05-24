@@ -13,7 +13,7 @@ jupyter = "*"
 
 [packages]
 click = "*"
-pyyaml = "*"
+oyaml = "*"
 
 [requires]
 python_version = "3.5"

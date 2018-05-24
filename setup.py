@@ -6,7 +6,7 @@ version = '0.1'
 setup(name=package,
       version=version,
       py_modules=["openapi_bundle"],
-      install_requires=['Click', 'PyYaml'],
+      install_requires=['Click', 'oyaml'],
       entry_points='''
         [console_scripts]
         openapi-bundle=openapi_bundle:cli
